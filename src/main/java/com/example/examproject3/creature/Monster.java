@@ -1,5 +1,7 @@
 package com.example.examproject3.creature;
 
+import com.example.examproject3.until.MessageHolder; // MessageHolderをインポート
+
 public abstract class Monster implements Creature {
     private String name;
     private int hp;
@@ -20,8 +22,10 @@ public abstract class Monster implements Creature {
     }
 
     @Override
-    public void showStatus() {
-        System.out.println(this.name + this.suffix + "：HP " + this.hp);
+    public String showStatus() { // 戻り値をStringに変更
+        String status = this.name + this.suffix + "：HP " + this.hp;
+        MessageHolder.addMessage(status);
+        return status;
     }
 
     @Override
@@ -47,11 +51,15 @@ public abstract class Monster implements Creature {
         this.suffix = suffix;
     }
 
-    public void run() { // runメソッドを追加
-        System.out.println(this.name + this.suffix + "は逃げ出した");
+    public String run() { // 戻り値をStringに変更
+        String message = this.name + this.suffix + "は逃げ出した";
+        MessageHolder.addMessage(message);
+        return message;
     }
 
-    public void die() { // dieメソッドを追加
-        System.out.println(this.name + this.suffix + "を倒した！");
+    public String die() { // 戻り値をStringに変更
+        String message = this.name + this.suffix + "を倒した！";
+        MessageHolder.addMessage(message);
+        return message;
     }
 }

@@ -3,35 +3,42 @@ package com.example.examproject3.creature.character;
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Character;
 import com.example.examproject3.creature.weapon.Wand; // Wandをインポート
+import com.example.examproject3.until.MessageHolder;
 
 public class Wizard extends Character {
     private int mp;
 
     public Wizard(String name, int hp, int mp) {
-        super(name, hp, new Wand()); // デフォルトで魔法の杖を装備
+        super(name, hp, new Wand());
         this.mp = mp;
     }
 
-    // magicメソッドに名称変更
-    public void magic(Creature target) {
+    public String magic(Creature target) { // 戻り値をStringに変更
         if (this.mp < getWeapon().getCost()) {
-            System.out.println("MPが足りない！");
-            return;
+            String message = "MPが足りない！";
+            MessageHolder.addMessage(message);
+            return message;
         }
-        System.out.println(getName() + getWeapon().attackMessage() + target.getName() + "に" + getWeapon().getDamage() + "のダメージを与えた！");
+        String message = getName() + getWeapon().attackMessage() + target.getName() + "に" + getWeapon().getDamage() + "のダメージを与えた！";
         target.setHp(target.getHp() - getWeapon().getDamage());
         setMp(getMp() - getWeapon().getCost());
+        MessageHolder.addMessage(message);
+        return message;
     }
 
     @Override
-    public void attack(Creature target) {
-        System.out.println(getName() + "は石を投げた！" + target.getName() + "に3のダメージを与えた！");
+    public String attack(Creature target) { // 戻り値をStringに変更
+        String message = getName() + "は石を投げた！" + target.getName() + "に3のダメージを与えた！";
         target.setHp(target.getHp() - 3);
+        MessageHolder.addMessage(message);
+        return message;
     }
 
     @Override
-    public void showStatus() {
-        System.out.println(getName() + "：HP " + getHp() + " MP " + this.mp);
+    public String showStatus() { // 戻り値をStringに変更
+        String status = getName() + "：HP " + getHp() + " MP " + this.mp;
+        MessageHolder.addMessage(status);
+        return status;
     }
 
     public int getMp() {

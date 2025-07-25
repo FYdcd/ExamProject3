@@ -3,31 +3,37 @@ package com.example.examproject3.creature.character;
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Character;
 import com.example.examproject3.creature.weapon.Dagger; // Daggerをインポート
+import com.example.examproject3.until.MessageHolder;
 
 public class Thief extends Character {
     private boolean guard;
 
     public Thief(String name, int hp) {
-        super(name, hp, new Dagger()); // デフォルトで短剣を装備
+        super(name, hp, new Dagger());
         this.guard = false;
     }
 
     @Override
-    public void attack(Creature target) {
+    public String attack(Creature target) { // 戻り値をStringに変更
         int damage = getWeapon().getDamage() * 2;
-        System.out.println(getName() + "は素早く2回攻撃した！" + target.getName() + "に" + damage + "のダメージを与えた！");
+        String message = getName() + "は素早く2回攻撃した！" + target.getName() + "に" + damage + "のダメージを与えた！";
         target.setHp(target.getHp() - damage);
+        MessageHolder.addMessage(message);
+        return message;
     }
 
-    public void guard() {
+    public String guard() { // 戻り値をStringに変更
         this.guard = true;
-        System.out.println(getName() + "は身構えた！次の攻撃を無効にする！");
+        String message = getName() + "は身構えた！次の攻撃を無効にする！";
+        MessageHolder.addMessage(message);
+        return message;
     }
 
     @Override
-    public void setHp(int hp) {
+    public void setHp(int hp) { // 戻り値はvoidのまま、メッセージ追加
         if (this.guard) {
-            System.out.println("しかし、" + getName() + "は攻撃を回避し、ダメージが入らなかった！");
+            String message = "しかし、" + getName() + "は攻撃を回避し、ダメージが入らなかった！";
+            MessageHolder.addMessage(message);
             this.guard = false;
         } else {
             super.setHp(hp);
