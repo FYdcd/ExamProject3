@@ -23,15 +23,15 @@ public class BattleEndServlet extends HttpServlet {
         if (gameState == null) {
             MessageHolder.addMessage("ゲームの状態が読み込めませんでした。");
         } else if (!gameState.isPartyAlive()) {
-            MessageHolder.addMessage("味方パーティは全滅してしまった…");
+            MessageHolder.addMessage(gameState.getPartyName() + "は全滅してしまった…");
         } else if (!gameState.areMonstersAlive()) {
-            MessageHolder.addMessage("敵を全て倒した" + gameState.getParty().get(0).getName() + "達は勝利した!"); // 先頭の勇者の名前を使用
+            MessageHolder.addMessage("敵を全て倒した" + gameState.getPartyName() + "は勝利した!");
         } else {
             MessageHolder.addMessage("戦闘が終了しました。"); // 想定外の終了
         }
 
         // 最終ステータス表示
-        MessageHolder.addMessage("\n---味方パーティ最終ステータス---");
+        MessageHolder.addMessage("\n---" + gameState.getPartyName() + "最終ステータス---");
         for (Character member : gameState.getParty()) {
             member.showStatus();
             if (member.isAlive()) {

@@ -8,6 +8,7 @@ import com.example.examproject3.creature.character.SuperHero;
 import com.example.examproject3.creature.character.Thief;
 import com.example.examproject3.creature.character.Wizard;
 import com.example.examproject3.until.MessageHolder;
+import com.example.examproject3.weapon.Weapon;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,7 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.Iterator; // Iteratorをインポート
+import java.util.Iterator;
+import java.util.List;
 
 @WebServlet("/battle")
 public class BattleServlet extends HttpServlet {
@@ -32,7 +34,6 @@ public class BattleServlet extends HttpServlet {
 
         Character attacker = gameState.getCurrentCharacter();
         if (attacker == null || !attacker.isAlive()) {
-            // 行動不能なキャラクターの場合は次のキャラクターへ
             gameState.nextCharacter();
             response.sendRedirect(request.getContextPath() + "/select");
             return;
@@ -40,17 +41,21 @@ public class BattleServlet extends HttpServlet {
 
         int actionChoice = -1;
         int targetMonsterIndex = -1;
+        int weaponIndex = -1; // 武器変更用
 
         try {
             actionChoice = Integer.parseInt(request.getParameter("actionChoice"));
             if (request.getParameter("targetMonsterIndex") != null && !request.getParameter("targetMonsterIndex").isEmpty()) {
                 targetMonsterIndex = Integer.parseInt(request.getParameter("targetMonsterIndex"));
             }
+            if (request.getParameter("weaponIndex") != null && !request.getParameter("weaponIndex").isEmpty()) {
+                weaponIndex = Integer.parseInt(request.getParameter("weaponIndex"));
+            }
         } catch (NumberFormatException e) {
             MessageHolder.addMessage("無効な入力です。");
             request.setAttribute("messages", MessageHolder.getMessages());
             MessageHolder.clearMessages();
-            request.getRequestDispatcher("/select.jsp").forward(request, response); // 選択画面に戻す
+            request.getRequestDispatcher("/select.jsp").forward(request, response);
             return;
         }
 
@@ -59,63 +64,94 @@ public class BattleServlet extends HttpServlet {
             targetMonster = gameState.getMonsters().get(targetMonsterIndex);
         }
 
+        // 武器変更処理 (選択された場合)
+        if (weaponIndex != -1) {
+            List<Weapon> availableWeapons = gameState.getAvailableWeapons();
+            if (weaponIndex >= 0 && weaponIndex < availableWeapons.size()) {
+                Weapon newWeapon = availableWeapons.get(weaponIndex);
+                // CharacterクラスにchangeWeaponメソッドがあることを前提
+                if (attacker instanceof Hero) { // Heroとそのサブクラス
+                    ((Hero) attacker).changeWeapon(newWeapon);
+                } else if (attacker instanceof Wizard) {
+                    ((Wizard) attacker).changeWeapon(newWeapon);
+                } else if (attacker instanceof Thief) {
+                    ((Thief) attacker).changeWeapon(newWeapon);
+                }
+            } else {
+                MessageHolder.addMessage("選択された武器は存在しません。");
+            }
+        }
+
+
         // 攻撃処理
         if (attacker instanceof Hero) {
             Hero currentHero = (Hero) attacker;
-            if (actionChoice == 1) { // 攻撃
-                if (targetMonster != null) {
-                    currentHero.attack(targetMonster);
-                } else {
-                    MessageHolder.addMessage("攻撃対象が見つかりませんでした。");
-                }
-            } else if (actionChoice == 2 && !(currentHero instanceof SuperHero)) { // SuperHeroになる
-                SuperHero superHero = new SuperHero(currentHero);
-                if (!superHero.isAlive()) {
-                    superHero.die();
-                    gameState.getParty().remove(currentHero); // 元のHeroを削除
-                    MessageHolder.addMessage(currentHero.getName() + "はスーパーヒーローになろうとしたが、力尽きてしまった！");
-                } else {
-                    int index = gameState.getParty().indexOf(currentHero);
-                    if (index != -1) {
-                        gameState.getParty().set(index, superHero);
+            switch (actionChoice) {
+                case 1: // 基本攻撃
+                    if (targetMonster != null) currentHero.basicAttack(targetMonster);
+                    break;
+                case 2: // 強攻撃
+                    if (targetMonster != null) currentHero.heavyAttack(targetMonster);
+                    break;
+                case 3: // 薙ぎ払い
+                    if (targetMonster != null) currentHero.slashAttack(targetMonster);
+                    break;
+                case 4: // SuperHeroになる
+                    if (!(currentHero instanceof SuperHero)) {
+                        SuperHero superHero = new SuperHero(currentHero);
+                        if (!superHero.isAlive()) {
+                            superHero.die();
+                            gameState.getParty().remove(currentHero);
+                            MessageHolder.addMessage(currentHero.getName() + "はスーパーヒーローになろうとしたが、力尽きてしまった！");
+                        } else {
+                            int index = gameState.getParty().indexOf(currentHero);
+                            if (index != -1) {
+                                gameState.getParty().set(index, superHero);
+                            }
+                            MessageHolder.addMessage(currentHero.getName() + "はスーパーヒーローに進化した！");
+                        }
                     }
-                    MessageHolder.addMessage(currentHero.getName() + "はスーパーヒーローに進化した！");
-                }
+                    break;
             }
         } else if (attacker instanceof Wizard) {
             Wizard currentWizard = (Wizard) attacker;
-            if (actionChoice == 1) { // 攻撃 (石を投げる)
-                if (targetMonster != null) {
-                    currentWizard.attack(targetMonster);
-                } else {
-                    MessageHolder.addMessage("攻撃対象が見つかりませんでした。");
-                }
-            } else if (actionChoice == 2) { // 魔法攻撃
-                if (targetMonster != null) {
-                    currentWizard.magic(targetMonster);
-                } else {
-                    MessageHolder.addMessage("攻撃対象が見つかりませんでした。");
-                }
+            switch (actionChoice) {
+                case 1: // 石を投げる
+                    if (targetMonster != null) currentWizard.attack(targetMonster);
+                    break;
+                case 2: // 火の玉
+                    if (targetMonster != null) currentWizard.fireBall(targetMonster);
+                    break;
+                case 3: // 氷の魔法
+                    if (targetMonster != null) currentWizard.iceBlast(targetMonster);
+                    break;
             }
         } else if (attacker instanceof Thief) {
             Thief currentThief = (Thief) attacker;
-            if (actionChoice == 1) { // 攻撃
-                if (targetMonster != null) {
-                    currentThief.attack(targetMonster);
-                    response.sendRedirect(request.getContextPath() + "/monster_attack"); // 盗賊は攻撃後すぐに敵ターンへ
-                    return; // ここで処理を終了
-                } else {
-                    MessageHolder.addMessage("攻撃対象が見つかりませんでした。");
-                }
-            } else if (actionChoice == 2) { // 守る (ガード)
-                currentThief.guard();
+            switch (actionChoice) {
+                case 1: // 通常攻撃 (2回攻撃)
+                    if (targetMonster != null) {
+                        currentThief.doubleAttack(targetMonster);
+                        response.sendRedirect(request.getContextPath() + "/monster_attack"); // 盗賊は攻撃後すぐに敵ターンへ
+                        return; // ここで処理を終了
+                    }
+                    break;
+                case 2: // 不意打ち
+                    if (targetMonster != null) {
+                        currentThief.sneakAttack(targetMonster);
+                        response.sendRedirect(request.getContextPath() + "/monster_attack"); // 盗賊は攻撃後すぐに敵ターンへ
+                        return; // ここで処理を終了
+                    }
+                    break;
+                case 3: // ガード
+                    currentThief.guard();
+                    break;
             }
         }
 
         // モンスターのHPチェックと状態変化
         if (targetMonster != null && !targetMonster.isAlive()) {
             targetMonster.die();
-            // Iteratorを使って安全にリストから削除
             Iterator<Monster> it = gameState.getMonsters().iterator();
             while (it.hasNext()) {
                 if (it.next() == targetMonster) {
@@ -125,7 +161,6 @@ public class BattleServlet extends HttpServlet {
             }
         } else if (targetMonster != null && targetMonster.getHp() <= 5) {
             targetMonster.run();
-            // Iteratorを使って安全にリストから削除
             Iterator<Monster> it = gameState.getMonsters().iterator();
             while (it.hasNext()) {
                 if (it.next() == targetMonster) {

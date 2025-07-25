@@ -4,6 +4,7 @@ import com.example.examproject3.GameState;
 import com.example.examproject3.creature.Character;
 import com.example.examproject3.creature.Monster;
 import com.example.examproject3.until.MessageHolder;
+import com.example.examproject3.weapon.Weapon;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 @WebServlet("/select")
 public class SelectServlet extends HttpServlet {
@@ -21,7 +24,6 @@ public class SelectServlet extends HttpServlet {
         GameState gameState = (GameState) session.getAttribute("gameState");
 
         if (gameState == null || !gameState.isPartyAlive() || !gameState.areMonstersAlive()) {
-            // ゲームが終了しているか、無効な状態の場合は終了画面へ
             response.sendRedirect(request.getContextPath() + "/battle_end");
             return;
         }
@@ -41,9 +43,11 @@ public class SelectServlet extends HttpServlet {
 
         request.setAttribute("currentCharacter", currentCharacter);
         request.setAttribute("monsters", gameState.getMonsters());
+        request.setAttribute("availableWeapons", gameState.getAvailableWeapons()); // 利用可能な武器リストを渡す
 
         // メッセージ表示
         MessageHolder.addMessage("\n--- " + currentCharacter.getName() + " のターン ---");
+        MessageHolder.addMessage("--- " + gameState.getPartyName() + " ---");
         for (Character member : gameState.getParty()) {
             member.showStatus();
         }
@@ -53,13 +57,13 @@ public class SelectServlet extends HttpServlet {
         }
 
         request.setAttribute("messages", MessageHolder.getMessages());
-        MessageHolder.clearMessages(); // メッセージをクリア
+        MessageHolder.clearMessages();
 
         request.getRequestDispatcher("/select.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response); // POSTリクエストもGETとして処理
+        doGet(request, response);
     }
 }
