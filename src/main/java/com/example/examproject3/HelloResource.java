@@ -14,6 +14,7 @@ public class HelloResource {
 }
 
 /*
+
 🛠️ **問題の概要**
 
 Tomcatは正常に起動し、`ExamProject3:war exploded` アーティファクトも「正常にデプロイされた」とログには出ています。ところが、ブラウザで `http://localhost:8080/ExamProject3_war_exploded/` にアクセスしようとした際に **HTTP 404 エラー** が出ています。つまり、Tomcatはリクエストされたリソースを見つけられていません。
