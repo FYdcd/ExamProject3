@@ -2,8 +2,8 @@ package com.example.examproject3.creature.character;
 
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Character;
-import com.example.examproject3.creature.weapon.Dagger; // Daggerをインポート
-import com.example.examproject3.until.MessageHolder;
+import com.example.examproject3.weapon.Dagger; // Daggerをインポート
+import until.MessageHolder;
 
 public class Thief extends Character {
     private boolean guard;

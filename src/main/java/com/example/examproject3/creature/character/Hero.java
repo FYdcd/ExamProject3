@@ -2,8 +2,8 @@ package com.example.examproject3.creature.character;
 
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Character;
-import com.example.examproject3.creature.weapon.Sword; // Swordをインポート
-import com.example.examproject3.until.MessageHolder;
+import com.example.examproject3.weapon.Sword; // Swordをインポート
+import until.MessageHolder;
 
 public class Hero extends Character {
 

@@ -1,4 +1,4 @@
-package com.example.examproject3.creature.weapon;
+package com.example.examproject3.weapon;
 
 public abstract class Weapon {
     private String name;

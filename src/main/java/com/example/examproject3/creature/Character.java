@@ -1,7 +1,7 @@
 package com.example.examproject3.creature;
 
-import com.example.examproject3.creature.weapon.Weapon;
-import com.example.examproject3.until.MessageHolder; // MessageHolderをインポート
+import com.example.examproject3.weapon.Weapon;
+import until.MessageHolder; // MessageHolderをインポート
 
 public abstract class Character implements Creature {
     private String name;

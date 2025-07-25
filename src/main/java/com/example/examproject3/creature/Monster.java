@@ -1,6 +1,6 @@
 package com.example.examproject3.creature;
 
-import com.example.examproject3.until.MessageHolder; // MessageHolderをインポート
+import until.MessageHolder; // MessageHolderをインポート
 
 public abstract class Monster implements Creature {
     private String name;

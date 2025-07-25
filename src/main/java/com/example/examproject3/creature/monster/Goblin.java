@@ -2,7 +2,7 @@ package com.example.examproject3.creature.monster;
 
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Monster;
-import com.example.examproject3.until.MessageHolder;
+import until.MessageHolder;
 
 public class Goblin extends Monster {
     public Goblin(char suffix, int hp) {
