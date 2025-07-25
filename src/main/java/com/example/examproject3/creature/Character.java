@@ -1,17 +1,19 @@
-package creature;
+package com.example.examproject3.creature;
 
-public abstract class Monster implements Creature {
+import com.example.examproject3.creature.weapon.Weapon;
+
+public abstract class Character implements Creature {
     private String name;
     private int hp;
-    private char suffix;
+    private Weapon weapon; // Weapon型のフィールドを追加
 
-    public Monster(String name, int hp, char suffix) {
+    public Character(String name, int hp, Weapon weapon) { // weaponを引数に追加
         if (hp < 0) {
             throw new IllegalArgumentException("初期設定に誤りがあるため、キャラクターを作成できませんでした");
         }
         this.name = name;
         this.hp = hp;
-        this.suffix = suffix;
+        this.weapon = weapon; // weaponを初期化
     }
 
     @Override
@@ -21,7 +23,7 @@ public abstract class Monster implements Creature {
 
     @Override
     public void showStatus() {
-        System.out.println(this.name + this.suffix + "：HP " + this.hp);
+        System.out.println(this.name + "：HP " + this.hp);
     }
 
     @Override
@@ -39,19 +41,15 @@ public abstract class Monster implements Creature {
         this.hp = Math.max(0, hp);
     }
 
-    public char getSuffix() {
-        return suffix;
+    public Weapon getWeapon() { // weaponのgetterを追加
+        return weapon;
     }
 
-    public void setSuffix(char suffix) {
-        this.suffix = suffix;
-    }
-
-    public void run() { // runメソッドを追加
-        System.out.println(this.name + this.suffix + "は逃げ出した");
+    public void setWeapon(Weapon weapon) { // weaponのsetterを追加
+        this.weapon = weapon;
     }
 
     public void die() { // dieメソッドを追加
-        System.out.println(this.name + this.suffix + "を倒した！");
+        System.out.println(this.name + "は死んでしまった！");
     }
 }

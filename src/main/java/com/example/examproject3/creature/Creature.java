@@ -1,4 +1,4 @@
-package creature;
+package com.example.examproject3.creature;
 
 public interface Creature {
     boolean isAlive();

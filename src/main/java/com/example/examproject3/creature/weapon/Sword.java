@@ -1,4 +1,4 @@
-package creature.weapon;
+package com.example.examproject3.creature.weapon;
 
 public class Sword extends Weapon {
     public Sword() {
