@@ -1,7 +1,7 @@
 package com.example.examproject3.creature.character;
 
 import com.example.examproject3.creature.Creature;
-import until.MessageHolder;
+import com.example.examproject3.until.MessageHolder;
 
 public class SuperHero extends Hero {
     public SuperHero(Hero hero) {

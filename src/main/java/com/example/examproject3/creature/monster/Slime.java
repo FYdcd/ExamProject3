@@ -2,7 +2,7 @@ package com.example.examproject3.creature.monster;
 
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Monster;
-import until.MessageHolder;
+import com.example.examproject3.until.MessageHolder;
 
 public class Slime extends Monster {
     public Slime(char suffix, int hp) {
