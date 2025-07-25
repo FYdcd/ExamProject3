@@ -2,6 +2,7 @@ package com.example.examproject3.creature.monster;
 
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Monster;
+import com.example.examproject3.until.MessageHolder;
 
 public class Goblin extends Monster {
     public Goblin(char suffix, int hp) {
@@ -10,7 +11,9 @@ public class Goblin extends Monster {
 
     @Override
     public String attack(Creature target) {
-        System.out.println(getName() + getSuffix() + "はナイフで切りつけた！" + target.getName() + "に8のダメージを与えた！");
+        String message = getName() + getSuffix() + "はナイフで切りつけた！" + target.getName() + "に8のダメージを与えた！";
         target.setHp(target.getHp() - 8);
+        MessageHolder.addMessage(message);
+        return message;
     }
 }

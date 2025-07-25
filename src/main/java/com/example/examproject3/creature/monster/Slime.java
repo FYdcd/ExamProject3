@@ -2,6 +2,7 @@ package com.example.examproject3.creature.monster;
 
 import com.example.examproject3.creature.Creature;
 import com.example.examproject3.creature.Monster;
+import com.example.examproject3.until.MessageHolder;
 
 public class Slime extends Monster {
     public Slime(char suffix, int hp) {
@@ -10,7 +11,9 @@ public class Slime extends Monster {
 
     @Override
     public String attack(Creature target) {
-        System.out.println(getName() + getSuffix() + "は体当たり攻撃！" + target.getName() + "に5のダメージを与えた！");
+        String message = getName() + getSuffix() + "は体当たり攻撃！" + target.getName() + "に5のダメージを与えた！";
         target.setHp(target.getHp() - 5);
+        MessageHolder.addMessage(message);
+        return message;
     }
 }
