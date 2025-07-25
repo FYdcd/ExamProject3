@@ -3,10 +3,6 @@ package com.example.examproject3.servlet;
 import com.example.examproject3.GameState;
 import com.example.examproject3.creature.Character;
 import com.example.examproject3.creature.Monster;
-import com.example.examproject3.creature.character.Hero;
-import com.example.examproject3.creature.character.SuperHero;
-import com.example.examproject3.creature.character.Thief;
-import com.example.examproject3.creature.character.Wizard;
 import com.example.examproject3.until.MessageHolder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,8 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList; // ArrayListをインポート
 
 @WebServlet("/select")
 public class SelectServlet extends HttpServlet {
